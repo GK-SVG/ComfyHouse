@@ -27,9 +27,8 @@ class Products {
                 const {
                     id
                 } = item.sys
-                const 
-                    image
-                 = item.fields.image.fields.file.url
+                const
+                    image = item.fields.image.fields.file.url
                 return {
                     title,
                     price,
@@ -65,19 +64,46 @@ class UI {
             <h4>$${product.price}</h4>
         </article>`
         });
-        productsDOM.innerHTML=results
+        productsDOM.innerHTML = results
+    }
+    getBagButtons() {
+        const buttons = [...document.querySelectorAll(".bag-btn")]
+        buttons.forEach(button => {
+            let id = button.dataset.id
+            let inCart = cart.find(item => item.id ===id )
+            if(inCart){
+                button.innerText = "In Cart"
+                button.disabled = true
+            }
+            else[
+                button.addEventListener('click',(event =>{
+                    event.target.innerText = "In Cart"
+                    event.target.disabled = true
+
+                }))
+            ]
+        })
     }
 }
 
 // local storage
 
-class Storage {}
+class Storage {
+    static saveProduct(products) {
+        localStorage.setItem("products", JSON.stringify(products))
+
+    }
+}
 
 document.addEventListener("DOMContentLoaded", () => {
     const ui = new UI()
     const products = new Products()
     // get all product
-    products.getProducts().then(products =>
-        ui.displayProduct(products))
+    products.getProducts().then(products => {
+        ui.displayProduct(products);
+        Storage.saveProduct(products)
+    }).then(() => {
+        ui.getBagButtons()
+    })
 
 })
